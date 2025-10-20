@@ -24,6 +24,7 @@ Each folder contains complete CRUD (Create, Read, Update, Delete) requests with 
 ---
 
 ## 📂 Project Structure
+```bash
 FakeStoreAPI_Postman_Project/
 ├── Environment/
 │ └── fakestore_environment.json
@@ -52,20 +53,7 @@ FakeStoreAPI_Postman_Project/
 │ ├── Update Cart (PUT /carts/{id})
 │ └── Delete Cart (DELETE /carts/{id})
 └── README.md
-
----
-
-## 🧠 Screenshots
-> *(Place these screenshots inside a folder named `/screenshots`)*
-
-### 1️⃣ Create User  
-![Create User](screenshots/create_user.png)
-
-### 2️⃣ Get All Products  
-![Get Products](screenshots/get_products.png)
-
-### 3️⃣ Create Cart  
-![Create Cart](screenshots/create_cart.png)
+```
 
 ---
 
@@ -74,6 +62,8 @@ FakeStoreAPI_Postman_Project/
 console.log("🔹 Starting request:", pm.info.requestName);
 console.log("Environment:", pm.environment.name);
 console.log("Base URL:", pm.environment.get("baseUrl"));
+```
+
 🚀 How to Run
 Open Postman
 
@@ -99,5 +89,10 @@ Request chaining with variables tested successfully
 
 All CRUD operations completed for Users, Products, and Carts
 
-🧑‍💻 Created by Eslam Roshdy
+## 👨‍💻 Author
+
+- **Eslam Roshdy**
+- [LinkedIn](www.linkedin.com/in/eslam-roshdy-a638b2175)
+- Email: esroshdy22@gmail.com
 Manual API Testing using Postman | FakeStoreAPI
+---

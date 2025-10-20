@@ -53,9 +53,6 @@ FakeStoreAPI_Postman_Project/
 │ └── Delete Cart (DELETE /carts/{id})
 └── README.md
 
-yaml
-Copy code
-
 ---
 
 ## 🧠 Screenshots

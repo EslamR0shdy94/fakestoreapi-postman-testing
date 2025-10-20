@@ -1,0 +1,1024 @@
+{
+	"info": {
+		"_postman_id": "16de4f74-cd7c-4880-a981-85a7dc4cc6a2",
+		"name": "FakeStore - API Tests",
+		"description": "# 🧪 FakeStore API Manual Testing Project\n\n## 📌 Description\n\nThis project focuses on **manual API testing** for [FakeStoreAPI](https://fakestoreapi.com) using **Postman**.  \nIt includes organized folders for testing authentication, users, products, and carts.  \nEach folder contains complete CRUD (Create, Read, Update, Delete) requests with proper environment variables and test validations.\n\n---\n\n## 🔗 API Used\n\n- **Base URL:** [https://fakestoreapi.com](https://fakestoreapi.com)\n    \n- **Documentation:** [https://fakestoreapi.com/docs](https://fakestoreapi.com/docs)\n    \n\n---\n\n## ⚙️ Tools Used\n\n| Tool | Purpose |\n| --- | --- |\n| 🧰 **Postman** | For managing and executing API requests |\n| ⚙️ **Environment Variables** | To store and reuse variables like `baseUrl`, `createdUserId`, `createdCartId` |\n| 🧪 **Collection Runner** | To run multiple requests sequentially |\n| 🧾 **Console Logs** | For debugging and tracking request info |\n\n---\n\n## 📂 Project Structure\n\nFakeStoreAPI_Postman_Project/  \n├── Environment/  \n│ └── fakestore_environment.json  \n├── Collections/  \n│ └── FakeStore_API_Collection.json  \n├── Folders/  \n│ ├── Auth/  \n│ │ ├── Login (POST /auth/login)  \n│ │ └── Register (POST /users)  \n│ ├── Users/  \n│ │ ├── Get All Users (GET /users)  \n│ │ ├── Get Single User (GET /users/{id})  \n│ │ ├── Create User (POST /users)  \n│ │ ├── Update User (PUT /users/{id})  \n│ │ └── Delete User (DELETE /users/{id})  \n│ ├── Products/  \n│ │ ├── Get All Products (GET /products)  \n│ │ ├── Get Single Product (GET /products/{id})  \n│ │ ├── Add Product (POST /products)  \n│ │ ├── Update Product (PUT /products/{id})  \n│ │ └── Delete Product (DELETE /products/{id})  \n│ └── Carts/  \n│ ├── Get All Carts (GET /carts)  \n│ ├── Get Single Cart (GET /carts/{id})  \n│ ├── Create Cart (POST /carts)  \n│ ├── Update Cart (PUT /carts/{id})  \n│ └── Delete Cart (DELETE /carts/{id})  \n└── README.md\n\n---\n\n## 💬 Console Logs Example\n\n\\`\\`\\`javascript  \nconsole.log(\"🔹 Starting request:\", pm.info.requestName);  \nconsole.log(\"Environment:\", pm.environment.name);  \nconsole.log(\"Base URL:\", pm.environment.get(\"baseUrl\"));  \n🚀 How to Run  \nOpen Postman\n\nCreate a new Environment named FakeStoreAPI\n\nAdd variable:  \nbaseUrl = [https://fakestoreapi.com](https://fakestoreapi.com)\n\nImport the Collection\n\nSelect the environment FakeStoreAPI\n\nRun the whole collection via Collection Runner\n\nObserve responses and test results\n\n✅ Results  \nAll endpoints were tested successfully:\n\nStatus codes validated (200, 201, 400, 404)\n\nRequest chaining with variables tested successfully\n\nAll CRUD operations completed for Users, Products, and Carts\n\n🧑‍💻 Created by Eslam Roshdy  \nManual API Testing using Postman | FakeStoreAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33701756",
+		"_collection_link": "https://e-commerce-api-testing-project.postman.co/workspace/396516ae-be8a-41cf-a512-32114dc5688a/collection/33701756-16de4f74-cd7c-4880-a981-85a7dc4cc6a2?action=share&source=collection_link&creator=33701756"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login - valid credentials",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 201\", () => pm.response.to.have.status(201));\r",
+									"const json = pm.response.json();\r",
+									"pm.expect(json).to.have.property(\"token\");\r",
+									"pm.environment.set(\"token\", json.token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"{{user_email}}\",\r\n  \"password\": \"{{user_password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Authenticates a user and returns an access token.\n\n**Purpose:**\nUse this endpoint to log in with valid user credentials. On success, it provides a token for authenticating subsequent API requests.\n\n**Request Body Parameters:**\n- `username` (string): The user's email address or username.\n- `password` (string): The user's password.\n\n**Expected Response:**\n- Status: 201 Created\n- Body: JSON object containing a `token` property (string) used for authentication in future requests.\n\nExample response:\n```json\n{\n  \"token\": \"<jwt-token-string>\"\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Login - Invalid credentials (wrong password)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status is 400 or 422\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400,422]);\r",
+									"});\r",
+									"pm.test(\"Has error message\", () => {\r",
+									"    try {\r",
+									"        let json = pm.response.json();\r",
+									"        pm.expect(json).to.have.property(\"error\");\r",
+									"    } catch (e) {\r",
+									"        pm.expect(pm.response.text().length).to.be.above(0);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"{{user_email}}\",\r\n  \"password\": \"wrongpass\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "## Login - Invalid Credentials (Wrong Password)\n\nThis POST request is used to authenticate a user by sending their credentials to the `/auth/login` endpoint. It specifically demonstrates the scenario where invalid credentials (such as a wrong password) are provided, allowing you to test how the API handles authentication failures.\n\n### Request Purpose\nUse this request to verify the API's response when a user attempts to log in with incorrect credentials. This is useful for testing error handling, validation, and security measures implemented by the authentication endpoint.\n\n### Request URL\n```\nPOST {{baseUrl}}/auth/login\n```\n\n### Request Body Parameters\nThe request body must be sent in raw JSON format and include the following fields:\n\n- `username` (string, required): The user's email address or username. Example: `{{user_email}}`\n- `password` (string, required): The user's password. In this test case, an intentionally incorrect password is used (e.g., `wrongpass`).\n\n**Example Request Body:**\n```json\n{\n  \"username\": \"{{user_email}}\",\n  \"password\": \"wrongpass\"\n}\n```\n\n### Expected Response\n- **Status Code:** `400` or `422` (Client Error)\n- **Response Body:** A JSON object containing an `error` property with a message explaining the authentication failure.\n\n**Example Error Response:**\n```json\n{\n  \"error\": \"Invalid username or password.\"\n}\n```\n\n### Notes\n- This request is intended for negative testing (invalid login attempts).\n- Ensure that the `baseUrl` and `user_email` environment variables are set before sending the request.\n- The response may vary depending on the API implementation, but it should always indicate an authentication error when credentials are invalid.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Login - Invalid credentials (empty password)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status is 400 or 422\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400,422]);\r",
+									"});\r",
+									"pm.test(\"Has error message\", () => {\r",
+									"    try {\r",
+									"        let json = pm.response.json();\r",
+									"        pm.expect(json).to.have.property(\"error\");\r",
+									"    } catch (e) {\r",
+									"        pm.expect(pm.response.text().length).to.be.above(0);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"{{user_email}}\",\r\n  \"password\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "**Purpose:**\nThis request is used to authenticate a user by submitting their credentials to the `/auth/login` endpoint. It is a POST request that initiates a login session for the user in the FakeStore API.\n\n**Request Body Parameters:**\n- `username` (string, required): The user's email address or username. Example: `user@example.com`\n- `password` (string, required): The user's password. Example: `yourpassword`\n\nBoth parameters must be provided in the JSON request body.\n\n**Expected Response Behavior:**\n- On successful authentication, the API typically returns a token or user session information (not shown in this test case).\n- If the credentials are invalid or missing (such as an empty password), the API responds with an error status code (`400` or `422`).\n- The response body for errors includes an `error` property with a descriptive message.\n\n**Error Handling:**\n- The request includes tests to verify that the response status code is either `400` or `422` for invalid credentials.\n- It also checks that the response contains an `error` message, ensuring proper error reporting for failed login attempts."
+					},
+					"response": []
+				},
+				{
+					"name": "Login - Invalid credentials (wrong Username)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status is 400 or 422\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400,422]);\r",
+									"});\r",
+									"pm.test(\"Has error message\", () => {\r",
+									"    try {\r",
+									"        let json = pm.response.json();\r",
+									"        pm.expect(json).to.have.property(\"error\");\r",
+									"    } catch (e) {\r",
+									"        pm.expect(pm.response.text().length).to.be.above(0);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"nouser\",\r\n  \"password\": \"{{user_password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "This request attempts to log in a user by sending a POST request to the /auth/login endpoint.\n\n**Purpose:**\nAuthenticate a user by verifying their credentials.\n\n**Input:**\n- `username` (string): The user's email or username.\n- `password` (string): The user's password.\nBoth fields are required in the JSON request body.\n\n**Expected Error Responses:**\n- `400 Bad Request` or `422 Unprocessable Entity`: Returned if the credentials are invalid or missing. The response includes an `error` message describing the issue."
+					},
+					"response": []
+				},
+				{
+					"name": "Login - Invalid credentials (empty Username)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status is 400 or 422\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400,422]);\r",
+									"});\r",
+									"pm.test(\"Has error message\", () => {\r",
+									"    try {\r",
+									"        let json = pm.response.json();\r",
+									"        pm.expect(json).to.have.property(\"error\");\r",
+									"    } catch (e) {\r",
+									"        pm.expect(pm.response.text().length).to.be.above(0);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"\",\r\n  \"password\": \"{{user_password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "This endpoint is used for user login authentication. It requires a username and password in the request body. If the credentials are invalid or missing, the API returns an error response with status code 400 or 422."
+					},
+					"response": []
+				},
+				{
+					"name": "Login - Invalid credentials (empty Username and Password)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status is 400 or 422\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([400,422]);\r",
+									"});\r",
+									"pm.test(\"Has error message\", () => {\r",
+									"    try {\r",
+									"        let json = pm.response.json();\r",
+									"        pm.expect(json).to.have.property(\"error\");\r",
+									"    } catch (e) {\r",
+									"        pm.expect(pm.response.text().length).to.be.above(0);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"\",\r\n  \"password\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "This endpoint is used for user login authentication.\n\n- **Method:** POST\n- **URL:** `{{baseUrl}}/auth/login`\n- **Request Body:** Requires a JSON object with the following fields:\n  - `username` (string): The user's login identifier.\n  - `password` (string): The user's password.\n\nIf the credentials are invalid or missing, the API returns an error response with status code **400** or **422** and an error message in the response body."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "List Products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", () => pm.response.to.have.status(200));\r",
+									"let json = pm.response.json();\r",
+									"pm.test(\"Response is array and length > 0\", () => {\r",
+									"    pm.expect(Array.isArray(json)).to.be.true;\r",
+									"    pm.expect(json.length).to.be.above(0);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							]
+						},
+						"description": "Retrieves a list of products from the API. This endpoint returns an array of product objects, each containing details such as ID, name, price, and other relevant information."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", () => pm.response.to.have.status(200));\r",
+									"let json = pm.response.json();\r",
+									"pm.test(\"Has id 1 and title\", () => {\r",
+									"    pm.expect(json).to.have.property(\"id\");\r",
+									"    pm.expect(json.id).to.eql(1);\r",
+									"    pm.expect(json).to.have.property(\"title\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
+						},
+						"description": "## Get Single Product\n\nThis request retrieves the details of a single product from the API by its unique ID.\n\n- **Purpose:** Fetch information about a specific product, such as its title, price, description, category, and image.\n- **Usage:**\n  - The request uses the `GET` method.\n  - The endpoint is constructed as `{{baseUrl}}/products/:id`, where `:id` is the product's unique identifier.\n  - The `baseUrl` variable should be set in your active environment to point to the API server.\n  - Replace `1` in the URL with the desired product ID to fetch details for a different product.\n\n**Example:**\n```\nGET {{baseUrl}}/products/1\n```\n\n**Response:**\nReturns a JSON object containing the product's details.\n\n---\n**Tip:** Use this request to verify product information or as part of a workflow to display product details in your application."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 or 201\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"let json = pm.response.json();\r",
+									"pm.test(\"Has id and title\", () => {\r",
+									"    pm.expect(json).to.have.property(\"id\");\r",
+									"    pm.expect(json).to.have.property(\"title\");\r",
+									"});\r",
+									"pm.environment.set(\"createdProductId\", json.id || json._id || \"\");\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Test Product\",\r\n  \"price\": 13.5,\r\n  \"description\": \"A test product from Postman\",\r\n  \"image\": \"https://i.pravatar.cc\",\r\n  \"category\": \"electronics\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products"
+							]
+						},
+						"description": "Creates a new product in the store.\n\n**Purpose:**\nThis POST request adds a new product to the product catalog.\n\n**Input:**\n- JSON body with the following fields:\n  - `title` (string): Name of the product\n  - `price` (number): Price of the product\n  - `description` (string): Description of the product\n  - `image` (string): URL to the product image\n  - `category` (string): Product category\n\n**Output:**\n- On success, returns the created product object including a unique `id` and all submitted fields.\n- Typical response status: 201 Created."
+					},
+					"response": []
+				},
+				{
+					"name": "check new product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products/{{createdProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{createdProductId}}"
+							]
+						},
+						"description": "**Purpose:**\nThis request retrieves the details of a specific product from the API using its unique identifier (`createdProductId`). It is typically used after creating a new product to verify its data or to fetch product information for display or further processing.\n\n**Request Method:**\nGET\n\n**Endpoint:**\n`{{baseUrl}}/products/{{createdProductId}}`\n\n**URL Parameters:**\n- `baseUrl` (environment variable): The base URL of the API server (e.g., `https://api.example.com`).\n- `createdProductId` (environment variable): The unique identifier of the product to fetch. This is usually set after a product is created in a previous request.\n\n**Request Body:**\nNone. This is a GET request and does not require a body.\n\n**Expected Response:**\n- **Status Code:** 200 OK (as validated by the test script)\n- **Response Body:** A JSON object containing the product details, such as:\n  - `id`: The product's unique identifier\n  - `title`: Name of the product\n  - `description`: Description of the product\n  - `price`: Price of the product\n  - `category`: Product category\n  - `image`: URL to the product image\n  - (Other fields may be present depending on the API)\n\n**Usage Notes:**\n- Ensure that `createdProductId` is set in the environment before sending this request.\n- The request will fail if the product does not exist or if the ID is invalid.\n\n**Test Script:**\nThis request includes a test to verify that the response status is 200 (OK)."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", () => pm.response.to.have.status(200));\r",
+									"let json = pm.response.json();\r",
+									"pm.test(\"updatedAt or title present\", () => {\r",
+									"    pm.expect(json).to.have.property(\"title\");\r",
+									"    pm.expect(json.title).to.eql(\"Test Product - Updated\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Test Product - Updated\",\r\n  \"price\": 15.0\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/{{createdProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{createdProductId}}"
+							]
+						},
+						"description": "Updates an existing product by its ID.\n\n**Request URL:**\n`{{baseUrl}}/products/{{createdProductId}}`\n- `{{baseUrl}}`: The base URL for the API (set in the environment).\n- `{{createdProductId}}`: The unique identifier of the product to update.\n\n**HTTP Method:**\nPUT\n\n**Request Body (raw JSON):**\n```\n{\n  \"title\": \"<string>\",\n  \"price\": <number>\n}\n```\n- `title`: The new name for the product.\n- `price`: The updated price for the product.\n\n**Expected Response:**\n- Status code: 200 OK\n- Response body contains the updated product object, including the new `title` and an `updatedAt` field.\n\n**Tests:**\n- Verifies the response status is 200.\n- Checks that the response contains the updated `title` field with the new value."
+					},
+					"response": []
+				},
+				{
+					"name": "check updated product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products/{{createdProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{createdProductId}}"
+							]
+						},
+						"description": "**Purpose:**\nThis request retrieves the details of a specific product from the e-commerce API by its unique identifier. It is useful for viewing product information such as name, description, price, category, and other attributes.\n\n**Request Method:**\nGET\n\n**Endpoint:**\n`{{baseUrl}}/products/{{createdProductId}}`\n\n**URL Parameters:**\n- `{{baseUrl}}`: The base URL for the API, set in the active environment.\n- `{{createdProductId}}`: The unique identifier of the product to fetch. This variable should be set to the desired product's ID before sending the request.\n\n**Request Body:**\nNone. This is a GET request and does not require a body.\n\n**Expected Response:**\n- **Status Code:** 200 OK (if the product is found)\n- **Response Body:** A JSON object containing the product's details. Example structure:\n  ```json\n  {\n    \"id\": 1,\n    \"title\": \"Product Name\",\n    \"description\": \"Product description...\",\n    \"price\": 99.99,\n    \"category\": \"Category Name\",\n    \"image\": \"https://...\",\n    ...\n  }\n  ```\n- If the product ID does not exist, a 404 Not Found status may be returned.\n\n**Tests:**\nThis request includes a test to verify that the response status is 200."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 or 204\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,204]);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/products/{{createdProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{createdProductId}}"
+							]
+						},
+						"description": "## Delete Product by ID\n\nThis request deletes a product from the system using its unique identifier.\n\n**Purpose:**\nRemoves a product resource from the database. This operation is irreversible.\n\n**Request Method:**\n`DELETE`\n\n**URL Structure:**\n```\n{{baseUrl}}/products/{{createdProductId}}\n```\n- `{{baseUrl}}`: The base URL for the API (set in the environment).\n- `{{createdProductId}}`: The unique ID of the product to be deleted (set as an environment variable).\n\n**Path Variables:**\n- `createdProductId` (required): The ID of the product you want to delete.\n\n**Expected Responses:**\n- `200 OK`: Product was successfully deleted. Response may include details of the deleted product.\n- `204 No Content`: Product was successfully deleted. No response body is returned.\n- `404 Not Found`: No product exists with the specified ID.\n- `401 Unauthorized` / `403 Forbidden`: Authentication or authorization failure.\n\n**Usage Notes:**\n- Ensure the `createdProductId` variable is set before sending this request.\n- This action cannot be undone.\n\n---\n[View in Collection](collection/33701756-16de4f74-cd7c-4880-a981-85a7dc4cc6a2)"
+					},
+					"response": []
+				},
+				{
+					"name": "check deleted product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status is 401 or 404\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([404,401]);\r",
+									"});\r",
+									"pm.test(\"Has error message\", () => {\r",
+									"    try {\r",
+									"        let json = pm.response.json();\r",
+									"        pm.expect(json).to.have.property(\"error\");\r",
+									"    } catch (e) {\r",
+									"        pm.expect(pm.response.text().length).to.be.above(0);\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/products/{{createdProductId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"products",
+								"{{createdProductId}}"
+							]
+						},
+						"description": "This request checks the status of a product by its ID after it has been deleted. Use this endpoint to verify that a deleted product is no longer accessible. When called with the ID of a deleted product, the API is expected to return a 401 (Unauthorized) or 404 (Not Found) status code, along with an error message in the response body. This helps confirm that the product has been successfully removed and cannot be retrieved by clients."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Carts",
+			"item": [
+				{
+					"name": "Create Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 or 201\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"let json = pm.response.json();\r",
+									"pm.test(\"Has id and products array\", () => {\r",
+									"    pm.expect(json).to.have.property(\"id\");\r",
+									"    pm.expect(json).to.have.property(\"products\");\r",
+									"});\r",
+									"pm.environment.set(\"createdCartId\", json.id || \"\");\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": 5,\r\n  \"date\": \"2023-10-01\",\r\n  \"products\": [\r\n    { \"productId\": 1, \"quantity\": 2 },\r\n    { \"productId\": 2, \"quantity\": 1 }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/carts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"carts"
+							]
+						},
+						"description": "Creates a new shopping cart for a user.\n\n**Purpose:**\nThis POST request adds a new cart for the specified user, including the products and quantities they wish to purchase.\n\n**Request Body Structure:**\n- `userId` (integer): The ID of the user creating the cart.\n- `date` (string, YYYY-MM-DD): The date the cart is created.\n- `products` (array): List of products to add to the cart. Each product object includes:\n  - `productId` (integer): The ID of the product.\n  - `quantity` (integer): The quantity of the product to add.\n\n**Example:**\n```json\n{\n  \"userId\": 5,\n  \"date\": \"2023-10-01\",\n  \"products\": [\n    { \"productId\": 1, \"quantity\": 2 },\n    { \"productId\": 2, \"quantity\": 1 }\n  ]\n}\n```\n\n**Response:**\nReturns the created cart object, including a unique `id` for the cart and the list of products added."
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve Cart by ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"let json = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Response contains correct cart ID\", () => {\r",
+									"    pm.expect(json).to.have.property(\"id\");\r",
+									"    pm.expect(json.id).to.eql(Number(pm.environment.get(\"createdCartId\")));\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response contains products array\", () => {\r",
+									"    pm.expect(json).to.have.property(\"products\");\r",
+									"    pm.expect(Array.isArray(json.products)).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/carts/{{createdCartId}}\n",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"carts",
+								"{{createdCartId}}\n"
+							]
+						},
+						"description": "Retrieves the details of a specific cart by its unique ID.\n\n**Purpose:**\nUse this request to fetch information about a cart, including its products and associated metadata, by providing the cart's ID.\n\n**URL Parameters:**\n- `createdCartId` (path variable): The unique identifier of the cart to retrieve. This value should be set in your environment or passed as a variable in the request URL.\n\n**Expected Response:**\n- Returns a JSON object containing the cart's details, including:\n  - `id`: The cart's unique identifier.\n  - `products`: An array of products currently in the cart.\n  - Additional cart metadata as provided by the API."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200 or 204\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200, 204]);\r",
+									"});\r",
+									"\r",
+									"let body = pm.response.text();\r",
+									"pm.test(\"Response is not empty\", () => {\r",
+									"    pm.expect(body.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"pm.environment.unset(\"createdCartId\");\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/carts/{{createdCartId}}\n",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"carts",
+								"{{createdCartId}}\n"
+							]
+						},
+						"description": "## Delete Cart\n\nThis request deletes a specific cart from the system using its unique identifier.\n\n### Purpose\nUse this endpoint to permanently remove a cart and all its contents. This is typically used when a user abandons a cart or completes a checkout process and the cart is no longer needed.\n\n### Request\n- **Method:** DELETE\n- **URL:** `{{baseUrl}}/carts/{{createdCartId}}`\n\n#### URL Variables\n- `baseUrl`: The base URL for the API environment (e.g., `https://api.example.com`).\n- `createdCartId`: The unique identifier of the cart to be deleted. This should be set to the cart you wish to remove.\n\n### Expected Responses\n- **200 OK**: The cart was successfully deleted. The response body may contain confirmation details.\n- **204 No Content**: The cart was successfully deleted and there is no response body.\n- **404 Not Found**: The specified cart does not exist.\n- **401 Unauthorized / 403 Forbidden**: Authentication or permission issues.\n\n### Notes\n- After a successful deletion, the `createdCartId` environment variable is automatically unset.\n- Ensure that the `createdCartId` variable is set before sending this request.\n\n### Example\n```\nDELETE https://api.example.com/carts/12345\n```\n\nThis will delete the cart with ID `12345` from the system."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Carts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status is 200\", () => pm.response.to.have.status(200));\r",
+									"\r",
+									"let json = pm.response.json();\r",
+									"pm.test(\"Response is an array\", () => pm.expect(Array.isArray(json)).to.be.true);\r",
+									"\r",
+									"pm.test(\"Carts count > 0\", () => pm.expect(json.length).to.be.above(0));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/carts?limit=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"carts"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Retrieves a list of shopping carts from the FakeStore API.\n\n**Endpoint:** `GET {{baseUrl}}/carts`\n\n**Query Parameters:**\n- `limit` (integer, optional): Limits the number of carts returned in the response. Example: `limit=5` will return up to 5 carts.\n\n**Response:**\nReturns an array of cart objects. Each object contains details about a shopping cart, such as its ID, user, date, and the products included. The response will be an array, and if the `limit` parameter is provided, the array will contain up to that number of carts."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Register new user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status is 200 or 201\", () => {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200,201]);\r",
+									"});\r",
+									"\r",
+									"let bodyText = pm.response.text();\r",
+									"\r",
+									"try {\r",
+									"    let json = pm.response.json();\r",
+									"\r",
+									"    pm.test(\"Response has id or username\", () => {\r",
+									"        pm.expect(json).to.satisfy(obj => obj.hasOwnProperty(\"id\") || obj.hasOwnProperty(\"username\"));\r",
+									"    });\r",
+									"\r",
+									"    if (json.id) {\r",
+									"        pm.environment.set(\"createdUserId\", json.id);\r",
+									"    } else if (json._id) {\r",
+									"        pm.environment.set(\"createdUserId\", json._id);\r",
+									"    } else if (json.username) {\r",
+									"        pm.environment.set(\"createdUsername\", json.username);\r",
+									"    }\r",
+									"\r",
+									"} catch (e) {\r",
+									"    pm.test(\"Response is not empty\", () => {\r",
+									"        pm.expect(bodyText.length).to.be.above(0);\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 31,\r\n  \"username\": \"Eslam Roshdy\",\r\n  \"email\": \"eslam@example.com\",\r\n  \"password\": \"P@ssw0rd123\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users\n",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users\n"
+							]
+						},
+						"description": "This endpoint registers a new user by sending user details (id, username, email, and password) in the request body. Use this to create a new user account in the system."
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200\", () => pm.response.to.have.status(200));\r",
+									"let json = pm.response.json();\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"Roshdy Eslam Roshdy\",\r\n  \"email\": \"roshdy@example.com\",\r\n  \"password\": \"P@ssw0rd123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/1\n",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1\n"
+							]
+						},
+						"description": "Updates the details of an existing user by user ID.\n\n**Purpose:**\nUse this PUT request to update user information such as username, email, and password for a specific user identified by their ID in the URL path.\n\n**Usage:**\n- Replace `{{baseUrl}}` with your API base URL.\n- The user ID to update should be specified in the URL (e.g., `/users/1`).\n- Provide the updated user details in the request body as JSON.\n\n**Request Body Example:**\n```json\n{\n  \"username\": \"Roshdy Eslam Roshdy\",\n  \"email\": \"roshdy@example.com\",\n  \"password\": \"P@ssw0rd123\"\n}\n```\n\n**Expected Response:**\n- Returns the updated user object with the new details.\n- Status code: 200 OK if the update is successful."
+					},
+					"response": []
+				},
+				{
+					"name": "delete user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status 200 or 204\", () => pm.expect(pm.response.code).to.be.oneOf([200,204]));\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/users/1\n",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"1\n"
+							]
+						},
+						"description": "**Delete User by ID**\n\nThis endpoint deletes a user from the system based on the specified user ID in the URL path. Use this request to permanently remove a user account.\n\n- **Method:** DELETE\n- **URL:** `{{baseUrl}}/users/:id`\n  - Replace `:id` with the user ID you wish to delete.\n\n**Responses:**\n- `200 OK`: User was successfully deleted. The response may include details of the deleted user or a confirmation message.\n- `204 No Content`: User was successfully deleted. No content is returned in the response body.\n- Other status codes may indicate errors (e.g., `404 Not Found` if the user does not exist).\n\n**Important:**\n- This action is irreversible. Deleted users cannot be restored.\n- Ensure you have the necessary permissions to perform this operation."
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					"console.log(\"🔹 Starting request:\", pm.info.requestName);\r",
+					"console.log(\"Environment:\", pm.environment.name);\r",
+					"console.log(\"Base URL:\", pm.environment.get(\"baseUrl\"));"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

@@ -22,18 +22,18 @@
 		},
 		{
 			"key": "token",
-			"value": "",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjIsInVzZXIiOiJtb3JfMjMxNCIsImlhdCI6MTc2MDk3MTkzM30.EupewruszcX2UQw4T-ZNhr9-H5MZXBx9Dl3lv1s9L2M",
 			"type": "any",
 			"enabled": true
 		},
 		{
 			"key": "createdProductId",
-			"value": "",
+			"value": 21,
 			"type": "any",
 			"enabled": true
 		}
 	],
 	"_postman_variable_scope": "environment",
-	"_postman_exported_at": "2025-10-20T14:42:08.255Z",
-	"_postman_exported_using": "Postman/11.68.0"
+	"_postman_exported_at": "2025-11-01T11:35:59.513Z",
+	"_postman_exported_using": "Postman/11.69.7"
 }
